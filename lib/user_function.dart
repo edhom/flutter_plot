@@ -1,10 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
 
 class UserFunction {
   
   Expression f;
-  charts.Color color;
+  Color color;
+  bool active;
 
-  UserFunction(this.f, this.color);
+  UserFunction(this.f, this.color, this.active);
 }

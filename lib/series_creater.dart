@@ -24,7 +24,8 @@ class SeriesCreater {
       (userFunction) =>
         Series<double, double>(
           id: userFunction.f.toString(),
-          colorFn: (_, __) => userFunction.color,
+          // Take custom color
+          colorFn: (_, __) => ColorUtil.fromDartColor(userFunction.color),
           // X Values
           domainFn: (double x, _) => x,
           // Y Values
