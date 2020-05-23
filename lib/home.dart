@@ -12,7 +12,6 @@ import 'package:flutter_plot/services/series_creater.dart';
 import 'package:flutter_plot/model/user_function.dart';
 
 
-
 class Home extends StatefulWidget {
   const Home({Key key}) : super(key: key);
 
@@ -212,8 +211,8 @@ class _HomeState extends State<Home> {
               onScaleUpdate: scale,
 
               child: Container(
-                padding: EdgeInsets.only(top: 15, right: 15, bottom: 120, left: 15),
-                child: Graph(seriesList, showTangente)
+                padding: EdgeInsets.only(top: 30, right: 15, bottom: 120, left: 20),
+                child: Graph(seriesList, showTangente, lowerBound, upperBound)
             ),
           ),
         ),
