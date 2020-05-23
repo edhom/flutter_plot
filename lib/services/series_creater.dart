@@ -1,9 +1,11 @@
 import 'package:charts_flutter/flutter.dart';
-import 'package:flutter_plot/math_utils.dart';
-import 'package:flutter_plot/user_function.dart';
+
+import 'package:flutter_plot/services/math_utils.dart';
+import 'package:flutter_plot/model/user_function.dart';
 
 class SeriesCreater {
 
+  // Service for math related methods
   MathUtils mathUtils = MathUtils();
 
   // Create List of n Series for n UserFunctions

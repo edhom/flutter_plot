@@ -1,14 +1,16 @@
 import 'package:charts_flutter/flutter.dart' as Charts;
 import 'package:flutter/material.dart';
-import 'package:flutter_plot/color_provider.dart';
+import 'package:math_expressions/math_expressions.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+
+import 'package:flutter_plot/services/color_provider.dart';
 import 'package:flutter_plot/input_dialog.dart';
 import 'package:flutter_plot/func_list_tile.dart';
 import 'package:flutter_plot/graph.dart';
-import 'package:flutter_plot/math_utils.dart';
-import 'package:flutter_plot/series_creater.dart';
-import 'package:flutter_plot/user_function.dart';
-import 'package:math_expressions/math_expressions.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:flutter_plot/services/math_utils.dart';
+import 'package:flutter_plot/services/series_creater.dart';
+import 'package:flutter_plot/model/user_function.dart';
+
 
 
 class Home extends StatefulWidget {
@@ -20,15 +22,28 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   
+  // Parser for Math expressions
   Parser parser = Parser();
+
+  // Service for math related methods
   MathUtils mathUtils = MathUtils();
+
+  // Service for easy color assigning
   ColorProvider colorProvider = ColorProvider();
+
+  // Service for creating plot data
+  SeriesCreater seriesCreater = SeriesCreater();
+
+  // List with all User Functions
   List<UserFunction> functions = [];
 
-  SeriesCreater seriesCreater = SeriesCreater();
+  // Plot data
   List<Charts.Series<double, double>> seriesList;
+  
+  // Optional tanget function
   UserFunction tangent;
 
+  // Add new function 
   void addFunc(String input) {
     Expression exp = parser.parse(input);
     UserFunction newFunc = UserFunction(
@@ -48,6 +63,7 @@ class _HomeState extends State<Home> {
       });
   }
 
+  // Update function at index
   void editFunc(String input, int index) {
     Expression exp = parser.parse(input);
     setState(() {
@@ -57,6 +73,7 @@ class _HomeState extends State<Home> {
     });
   }
 
+
   void showEditDialog(int index) {
     showDialog<AlertDialog>(
       context: context,
@@ -65,6 +82,7 @@ class _HomeState extends State<Home> {
       });
   }
 
+  // Delete function at index
   void deleteFunc(int index) {
     setState(() {
       functions.removeAt(index);
@@ -72,6 +90,7 @@ class _HomeState extends State<Home> {
     });
   }
 
+  // Show or hide function at index
   void toggleShow(int index) {
     setState(() {
       functions[index].active = !functions[index].active;
@@ -79,6 +98,7 @@ class _HomeState extends State<Home> {
     });
   }
 
+  // Update Plot Data and add tangent if available
   void updatePlot() {
     List<UserFunction> activeFunctions = functions.where((userFunc) => userFunc.active).toList();
     if (tangent != null) {
@@ -87,6 +107,7 @@ class _HomeState extends State<Home> {
     seriesList = seriesCreater.create(activeFunctions, -3, 3);
   }
 
+  // On selection, calculate tangent and set var 
   void showTangente(Charts.SelectionModel<num> model) {
     String funcID = model.selectedSeries.first.id;
     num xVal = model.selectedDatum.first.datum;
@@ -96,6 +117,7 @@ class _HomeState extends State<Home> {
     });
   }
 
+  // Add Demo Function on start up
   @override
   void initState() {
     super.initState();
@@ -106,6 +128,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
 
+    // Border Radius for Bottom Sheet
     BorderRadiusGeometry radius = BorderRadius.only(
     topLeft: Radius.circular(50.0),
     topRight: Radius.circular(50.0),
@@ -119,6 +142,8 @@ class _HomeState extends State<Home> {
         panel: Center(
           child: Column(
             children: [
+              
+              // Header
               Padding(
                 padding: const EdgeInsets.only(top: 30.0),
                 child: Text(
@@ -129,6 +154,8 @@ class _HomeState extends State<Home> {
                     ),
                 ),
               ),
+
+              // List View with Functions
               Expanded(
                 child: ListView.builder(
                   padding: EdgeInsets.symmetric(vertical: 25, horizontal: 10),
@@ -142,6 +169,8 @@ class _HomeState extends State<Home> {
             ],
           ),
         ),
+
+        // Actual Graph
         body: Center(
           child: Container(
             padding: EdgeInsets.only(top: 15, right: 15, bottom: 120, left: 15),
@@ -149,6 +178,8 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
+      
+      // Add Button
       floatingActionButton: FloatingActionButton(
         onPressed: showAddDialog,
         tooltip: 'New Function',

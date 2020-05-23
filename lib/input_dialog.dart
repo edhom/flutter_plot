@@ -3,9 +3,15 @@ import 'package:math_expressions/math_expressions.dart';
 
 class InputDialog extends StatefulWidget {
 
+  // Optional Param, used to show function when editing
   final String exp;
+
+  // I use this parser for validation
   final Parser parser;
+
+  // saveFunc is either addFunction or editFunction
   final void Function(String txt) saveFunc;
+
   InputDialog(this.saveFunc, this.parser, {this.exp = ''});
 
   @override
@@ -33,7 +39,10 @@ class _InputDialogState extends State<InputDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
+            
             SizedBox(height: 20),
+            
+            // Input Field
             TextFormField(
               initialValue: widget.exp,
               style: TextStyle(
@@ -43,6 +52,7 @@ class _InputDialogState extends State<InputDialog> {
               textAlign: TextAlign.center,
               onChanged: (String txt) => input = txt,
               onFieldSubmitted: (String txt) => save(),
+              // Validation, has to be parsable
               validator: (String input) {
                 if (input.isEmpty) {
                   return 'Please enter a value';
@@ -55,7 +65,10 @@ class _InputDialogState extends State<InputDialog> {
                 return null;
               }
             ),
+            
             SizedBox(height: 25),
+            
+            // Save Button
             RawMaterialButton(
               onPressed: save,
               elevation: 2.0,

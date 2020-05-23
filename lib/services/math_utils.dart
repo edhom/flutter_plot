@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_plot/user_function.dart';
 import 'package:math_expressions/math_expressions.dart';
+
+import 'package:flutter_plot/model/user_function.dart';
 
 class MathUtils {
 
+  //Context Model to bind variable eveluation
   ContextModel _cm = ContextModel();
+  
+  //Math expression parser
   Parser parser = Parser();
 
   // Calculate y for f(x)
@@ -21,7 +25,7 @@ class MathUtils {
     Number b = Number(calcY(f, xVal));
     Number diff = Number(xVal);
     Variable x = Variable('x');
-    Expression tang = m*(x-diff)+b;
+    Expression tang = m * ( x - diff ) + b;
     return UserFunction(tang.toString(), tang, Colors.grey, true);
   }
 
