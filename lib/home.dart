@@ -43,6 +43,13 @@ class _HomeState extends State<Home> {
   // Optional tanget function
   UserFunction tangent;
 
+  // Lower Bound
+  double lowerBound;
+  double oldLowerBound;
+  // Upper Bound
+  double upperBound;
+  double oldUpperBound;
+
   // Add new function 
   void addFunc(String input) {
     Expression exp = parser.parse(input);
@@ -104,11 +111,19 @@ class _HomeState extends State<Home> {
     if (tangent != null) {
       activeFunctions.add(tangent);
     }
-    seriesList = seriesCreater.create(activeFunctions, -3, 3);
+    seriesList = seriesCreater.create(activeFunctions, lowerBound, upperBound);
   }
 
   // On selection, calculate tangent and set var 
   void showTangente(Charts.SelectionModel<num> model) {
+    // When user clicks tangent itself, remove tangent
+    if (model.selectedSeries.first.id == 'tangent') {
+      setState(() {
+        tangent = null;
+        updatePlot();
+      });
+      return;
+    }
     String funcID = model.selectedSeries.first.id;
     num xVal = model.selectedDatum.first.datum;
     tangent = mathUtils.getTangente(funcID, xVal);
@@ -117,10 +132,29 @@ class _HomeState extends State<Home> {
     });
   }
 
+  // Init Scale: I make use of oldBounds to prevent exponentiell growing
+  void scaleInit(ScaleStartDetails scaleStartDetails) {
+    setState(() {
+      oldLowerBound = lowerBound;
+      oldUpperBound = upperBound;
+    });
+  }
+
+  // Scale: I make use of oldBounds to prevent exponentiell growing
+  void scale(ScaleUpdateDetails scaleUpdateDetails) {
+    setState(() {
+      upperBound = oldUpperBound / scaleUpdateDetails.scale;
+      lowerBound = oldLowerBound / scaleUpdateDetails.scale;
+      updatePlot();
+    });
+  }
+
   // Add Demo Function on start up
   @override
   void initState() {
     super.initState();
+    lowerBound = -3;
+    upperBound = 3;
     functions.add(UserFunction('x^2', parser.parse('x^2'), colorProvider.getColor(), true));
     updatePlot();
   }
@@ -172,9 +206,15 @@ class _HomeState extends State<Home> {
 
         // Actual Graph
         body: Center(
-          child: Container(
-            padding: EdgeInsets.only(top: 15, right: 15, bottom: 120, left: 15),
-            child: Graph(seriesList, showTangente)
+          child: GestureDetector(
+
+              onScaleStart: scaleInit,
+              onScaleUpdate: scale,
+
+              child: Container(
+                padding: EdgeInsets.only(top: 15, right: 15, bottom: 120, left: 15),
+                child: Graph(seriesList, showTangente)
+            ),
           ),
         ),
       ),

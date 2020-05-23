@@ -11,15 +11,15 @@ class SeriesCreater {
   // Create List of n Series for n UserFunctions
   List<Series<double, double>> create(List<UserFunction> userFunctions, double lowerBound, double upperBound) {
 
-    // Get 40 x values across the range
-    double step = (upperBound - lowerBound) / 40;
+    // Get 50 x values across the range
+    double step = (upperBound - lowerBound) / 50.0;
     List<double> range = [for (var i = lowerBound; i <= upperBound; i += step) i];
 
     // Map every user function to a Series
      return userFunctions.map(
       (userFunction) => 
         Series<double, double>(
-          id: userFunction.fExp.toString(),
+          id: userFunction.fString,
           // Take custom color
           colorFn: (_, __) => ColorUtil.fromDartColor(userFunction.color),
           // X Values

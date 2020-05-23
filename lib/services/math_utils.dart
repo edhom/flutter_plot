@@ -26,7 +26,7 @@ class MathUtils {
     Number diff = Number(xVal);
     Variable x = Variable('x');
     Expression tang = m * ( x - diff ) + b;
-    return UserFunction(tang.toString(), tang, Colors.grey, true);
+    return UserFunction('tangent', tang, Colors.grey, true);
   }
 
 
