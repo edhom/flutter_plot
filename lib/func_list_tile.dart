@@ -3,7 +3,11 @@ import 'package:flutter_plot/user_function.dart';
 
 class FuncListTile extends StatelessWidget {
   final UserFunction function;
-  const FuncListTile(this.function);
+  final Function delete;
+  final Function edit;
+  final Function toggleShow;
+  
+  const FuncListTile(this.function, this.delete, this.edit, this.toggleShow);
 
   @override
   Widget build(BuildContext context) {
@@ -14,11 +18,11 @@ class FuncListTile extends StatelessWidget {
         leading: Checkbox(
           value: function.active,
           tristate: true,
-          onChanged: (bool value) {},
+          onChanged: (bool value) => toggleShow(),
           activeColor: function.color,
         ),
         title: Text(
-          function.f.toString().trimLeft(),
+          function.fString,
           textAlign: TextAlign.center,
           style: TextStyle(
               fontSize: 18.0,
@@ -28,9 +32,9 @@ class FuncListTile extends StatelessWidget {
         ),
         trailing: IconButton(
           icon: Icon(Icons.delete_outline),
-          onPressed: () => {},
+          onPressed: delete,
         ),
-        onTap: () {},
+        onTap: edit,
       ),
     );
   }

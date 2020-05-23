@@ -3,9 +3,10 @@ import 'package:math_expressions/math_expressions.dart';
 
 class UserFunction {
   
-  Expression f;
+  String fString;
+  Expression fExp;
   Color color;
   bool active;
 
-  UserFunction(this.f, this.color, this.active);
+  UserFunction(this.fString, this.fExp, this.color, this.active);
 }
