@@ -4,6 +4,7 @@ import 'package:flutter_plot/color_provider.dart';
 import 'package:flutter_plot/input_dialog.dart';
 import 'package:flutter_plot/func_list_tile.dart';
 import 'package:flutter_plot/graph.dart';
+import 'package:flutter_plot/math_utils.dart';
 import 'package:flutter_plot/series_creater.dart';
 import 'package:flutter_plot/user_function.dart';
 import 'package:math_expressions/math_expressions.dart';
@@ -20,11 +21,13 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   
   Parser parser = Parser();
+  MathUtils mathUtils = MathUtils();
   ColorProvider colorProvider = ColorProvider();
   List<UserFunction> functions = [];
 
   SeriesCreater seriesCreater = SeriesCreater();
   List<Charts.Series<double, double>> seriesList;
+  UserFunction tangent;
 
   void addFunc(String input) {
     Expression exp = parser.parse(input);
@@ -78,7 +81,19 @@ class _HomeState extends State<Home> {
 
   void updatePlot() {
     List<UserFunction> activeFunctions = functions.where((userFunc) => userFunc.active).toList();
+    if (tangent != null) {
+      activeFunctions.add(tangent);
+    }
     seriesList = seriesCreater.create(activeFunctions, -3, 3);
+  }
+
+  void showTangente(Charts.SelectionModel<num> model) {
+    String funcID = model.selectedSeries.first.id;
+    num xVal = model.selectedDatum.first.datum;
+    tangent = mathUtils.getTangente(funcID, xVal);
+    setState(() {
+      updatePlot();
+    });
   }
 
   @override
@@ -130,7 +145,7 @@ class _HomeState extends State<Home> {
         body: Center(
           child: Container(
             padding: EdgeInsets.only(top: 15, right: 15, bottom: 120, left: 15),
-            child: Graph(seriesList)
+            child: Graph(seriesList, showTangente)
           ),
         ),
       ),

@@ -4,8 +4,9 @@ import 'package:charts_flutter/flutter.dart';
 class Graph extends StatelessWidget {
   
   final List<Series> seriesList;
+  final Function addTangente;
 
-  Graph(this.seriesList);
+  Graph(this.seriesList, this.addTangente);
 
   final List<ChartBehavior> behaviors = [
     RangeAnnotation([
@@ -36,6 +37,12 @@ class Graph extends StatelessWidget {
       ),
       
       behaviors: behaviors,
+      selectionModels: [
+        SelectionModelConfig(
+          type: SelectionModelType.info,
+          changedListener: addTangente,
+        ),
+      ],
     );
   }
 }
